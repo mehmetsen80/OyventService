@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.oy.vent" >
+
+    <!-- Permission - Internet Connect -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Network State Permissions -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Permission to write files, i.e. temp images -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- Permission to read files, i.e. temp images -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- NETWORK_PROVIDER and GPS_PROVIDER permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!-- NETWORK_PROVIDER permissions -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.oy.vent.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.oy.vent.CameraActivity" >
+        </activity>
+        <activity
+            android:name="com.oy.vent.PostFeedActivity"
+            android:label="@string/title_activity_post_feed" >
+        </activity>
+    </application>
+
+</manifest>

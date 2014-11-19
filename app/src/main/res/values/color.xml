@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="list_item_title">#ffffff</color>
+    <color name="list_background">#ff003f7f</color>
+    <color name="list_background_pressed">#00507d</color>
+    <color name="list_divider">#fff</color>
+    <color name="grid_state_pressed">#BB7dbcd3</color>
+    <color name="grid_state_focused">#777dbcd3</color>
+</resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/header_gradient"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    >
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/imageViewFullSized"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/logo" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+
+        android:clickable="true"
+        android:orientation="vertical"
+        >
+
+        <GridView
+            android:id="@+id/gridView"
+            style="@style/PhotoGridLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.44"
+            android:layout_margin="5dip"
+            android:columnWidth="@dimen/image_thumbnail_size"
+            android:horizontalSpacing="@dimen/image_thumbnail_spacing"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="@dimen/image_thumbnail_spacing" />
+
+
+</LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,102 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.oy.vent.PostFeedActivity"
+    >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        >
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="0dip"
+            android:layout_marginTop="0dip"
+            android:gravity="left|fill_vertical"
+            android:background="@null"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:id="@+id/mImageView"
+            android:layout_gravity="center_horizontal"
+            />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dip"
+            android:layout_marginTop="0dip"
+
+            android:background="@null"
+            android:baselineAligned="false"
+            android:orientation="horizontal" >
+            <!-- Browse Photo Button -->
+            <ImageButton
+                android:id="@+id/btnBrowsePhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dip"
+                android:layout_marginTop="1dip"
+                android:background="@null"
+                android:contentDescription="@string/browse_photo"
+                android:paddingBottom="1dip"
+                android:paddingTop="0dip"
+                android:src="@drawable/camera_icon" />
+
+        </RelativeLayout>
+
+
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dip"
+            android:layout_marginTop="0dip"
+            android:background="@null"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:id="@+id/layoutaddphoto">
+            <!-- Add Photo Button -->
+            <ImageButton
+                android:id="@+id/btnAddPhoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="1dip"
+                android:layout_marginTop="1dip"
+                android:background="@null"
+                android:contentDescription="@string/add_photo"
+                android:paddingBottom="1dip"
+                android:paddingTop="0dip"
+                android:src="@drawable/camera_icon" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+android:layout_gravity="bottom"
+            >
+            <TextView android:text="@string/hello_world"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>
