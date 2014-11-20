@@ -12,6 +12,8 @@
     <string name="GPSAlertDialogTitle">GPS Setttings</string>
     <string name="GPSAlertDialogMessage">GPS is not enabled. Do you want to go to settings menu?</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_post_feed">Post Feed</string>
+    <string name="enter_text">Enter Text</string>
 
     <!-- menu drawer title items -->
     <string-array name="nav_drawer_items">
@@ -33,7 +35,6 @@
 
     </array>
 
-    <string name="title_activity_post_feed">Post Feed</string>
-    <string name="hello_world">Hello world!</string>
+
 
 </resources>

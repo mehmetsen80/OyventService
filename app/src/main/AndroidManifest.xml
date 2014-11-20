@@ -30,8 +30,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.oy.vent.CameraActivity" >
-        </activity>
         <activity
             android:name="com.oy.vent.PostFeedActivity"
             android:label="@string/title_activity_post_feed" >

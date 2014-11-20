@@ -14,11 +14,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -54,19 +57,27 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
-public class PostFeedActivity extends CameraActivity {
+public class PostFeedActivity  extends Activity{
 
+    // Storage for camera image URI components
+    private final static String CAPTURED_PHOTO_PATH_KEY = "mCurrentPhotoPath";
+    private final static String CAPTURED_PHOTO_URI_KEY = "mCapturedImageURI";
+
+    private String mCurrentPhotoPath = null;
+    private Uri mCapturedImageURI = null;
     private static String TAG = PostFeedActivity.class.getName();
     // Activity result key for camera
     private static final int REQUEST_TAKE_PHOTO = 11111;
     // Code for our image picker select action.
     private static final int IMAGE_PICKER_SELECT = 22222;
-    private ImageView mImageView;
+    // to return to the home-fragment
+    private static final int REQUEST_PHOTO = 33333;
     // Progress Dialog
     private ProgressDialog pDialog = null;
     //GPS Tracker to get Geo coordinates
     private GPSTracker gpsTracker;
     private static final String URL_AJAX = "http://oyvent.com/ajax/PhotoHandlerMobile.php";
+    private File file = null;
 
 
     @Override
@@ -76,8 +87,24 @@ public class PostFeedActivity extends CameraActivity {
 
         try {
 
-            // Set the image view
-            mImageView = (ImageView)findViewById(R.id.mImageView);
+            // Edit Text
+            final EditText mEditText = (EditText) findViewById(R.id.mEditText);
+            mEditText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = mEditText.getText().toString();
+                    if(text == "Enter Text")
+                        mEditText.setText("");
+                }
+            });
+            // Send Button
+            final Button mBtnSendFeed = (Button) findViewById(R.id.mBtnSendFeed);
+            mBtnSendFeed.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                   new LoadData().execute(file);
+                }
+            });
 
             //setup GPS Tracker to get the geo coordinates
             if(gpsTracker == null) {
@@ -91,7 +118,7 @@ public class PostFeedActivity extends CameraActivity {
                 pDialog = new ProgressDialog(this);
 
             //take picture image button
-            final ImageButton mTakePictureButton = (ImageButton)findViewById(R.id.btnAddPhoto);
+            final Button mTakePictureButton = (Button)findViewById(R.id.btnCapturePhoto);
             mTakePictureButton.setClickable(true);
             mTakePictureButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -100,9 +127,8 @@ public class PostFeedActivity extends CameraActivity {
                 }
             });
 
-
             // Reference to picker button.
-            final ImageButton mPickPhotoButton = (ImageButton)findViewById(R.id.btnBrowsePhoto);
+            final Button mPickPhotoButton = (Button)findViewById(R.id.btnBrowsePhoto);
             mPickPhotoButton.setClickable(true);
             mPickPhotoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -111,7 +137,6 @@ public class PostFeedActivity extends CameraActivity {
                     startActivityForResult(i, IMAGE_PICKER_SELECT);
                 }
             });
-
 
             //Uri selectedImage = getIntent().getData();
             /*Bundle extras = getIntent().getExtras();
@@ -142,13 +167,11 @@ public class PostFeedActivity extends CameraActivity {
                 return;
             }
 
-
             new LoadData().execute(file);//TODO: call this when button pushed*/
 
         }catch(Exception e){
             Log.e(TAG,e.getMessage());
         }
-
     }
 
     /**
@@ -169,8 +192,8 @@ public class PostFeedActivity extends CameraActivity {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         // Ensure that there's a camera activity to handle the intent
-        CameraActivity activity = this;
-        if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
+        //Activity activity = this;
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go.
             // If you don't do this, you may get a crash in some devices.
             File photoFile = null;
@@ -185,31 +208,25 @@ public class PostFeedActivity extends CameraActivity {
             // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri fileUri = Uri.fromFile(photoFile);
-                activity.setCapturedImageURI(fileUri);
-                activity.setCurrentPhotoPath(fileUri.getPath());
-                activity.setPhotoActionType(PhotoActionType.CAPTURE);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, activity.getCapturedImageURI());
+                setCapturedImageURI(fileUri);
+                setCurrentPhotoPath(fileUri.getPath());
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, getCapturedImageURI());
                 startActivityForResult(takePictureIntent,REQUEST_TAKE_PHOTO);
             }
         }
     }
 
-    /**
-     * The activity returns with the photo.
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
             //addPhotoToGallery();
-            CameraActivity activity = this;
+           //Activity activity = this;
 
-            Bitmap bitmap = setFullImageFromFilePath(activity.getCurrentPhotoPath(), mImageView);// Show the full sized image.
+            Bitmap bitmap = setFullImageFromFilePath();// Show the full sized image.
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-            File file = new File(activity.getCurrentPhotoPath());
+            file = new File(getCurrentPhotoPath());
             try {
                 file.createNewFile();
                 FileOutputStream fo = new FileOutputStream(file);
@@ -218,7 +235,6 @@ public class PostFeedActivity extends CameraActivity {
             } catch (IOException e) {
                 Log.e(TAG,e.getMessage());
             }
-            new LoadData().execute(file);
 
             /*Intent postPictureIntent = new Intent(this, PostFeedActivity.class);
             Bundle extras = new Bundle();
@@ -226,20 +242,17 @@ public class PostFeedActivity extends CameraActivity {
             extras.putString("POSTTYPE",PhotoActionType.CAPTURE.toString());
             postPictureIntent.putExtras(extras);
             startActivityForResult(postPictureIntent, POST_PICTURE);*/
-
-
-
         }
         else if (requestCode == IMAGE_PICKER_SELECT  && resultCode == Activity.RESULT_OK) {
 
-
-            Uri selectedImage = data.getData();
-            File file = new File(getImagePathUri(selectedImage));
-            CameraActivity activity = this;
-            activity.setCurrentPhotoPath("file:" + selectedImage.getPath());
-            activity.setCapturedImageURI(selectedImage);
-            activity.setPhotoActionType(PhotoActionType.PICK);
-            setFullImageFromFilePath(selectedImage.getPath(),mImageView);
+            try {
+                final ImageView mImageView = (ImageView) findViewById(R.id.mImageView);
+                Bitmap bitmap = getBitmapFromCameraData(data, this);
+                mImageView.setImageBitmap(bitmap);
+                file = new File(getCurrentPhotoPath());
+            }catch (Exception e){
+                Log.e(TAG,e.getMessage());
+            }
 
             /*Intent postPictureIntent = new Intent(this, PostFeedActivity.class);
             Bundle extras = new Bundle();
@@ -248,8 +261,7 @@ public class PostFeedActivity extends CameraActivity {
             postPictureIntent.putExtras(extras);
             startActivityForResult(postPictureIntent, POST_PICTURE);*/
 
-
-            if(file.exists() && file.getAbsolutePath() != null && file.getAbsolutePath() != "")
+            /*if(file.exists() && file.getAbsolutePath() != null && file.getAbsolutePath() != "")
             {
                 new LoadData().execute(file);
             }else
@@ -257,12 +269,11 @@ public class PostFeedActivity extends CameraActivity {
                 Toast.makeText(this, "Picture Not Uploaded",Toast.LENGTH_LONG).show();
                 mImageView.setImageBitmap(null);
                 mImageView.setImageDrawable(null);
-                activity.setCurrentPhotoPath(null);
-                activity.setCapturedImageURI(null);
-            }
+                setCurrentPhotoPath(null);
+                setCapturedImageURI(null);
+            }*/
 
             // Bitmap bitmap = getBitmapFromCameraData(data,getActivity());
-
 
         }
         else {
@@ -292,8 +303,8 @@ public class PostFeedActivity extends CameraActivity {
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        CameraActivity activity = this;
-        activity.setCurrentPhotoPath("file:" + image.getAbsolutePath());
+        //CameraActivity activity = this;
+        setCurrentPhotoPath("file:" + image.getAbsolutePath());
         return image;
     }
 
@@ -303,11 +314,7 @@ public class PostFeedActivity extends CameraActivity {
     //get the album directory
     private File getAlbumDir() {
         File storageDir = null;
-
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-
-            // storageDir = mAlbumStorageDirFactory.getAlbumStorageDir(getString(R.string.album_name));
-
             storageDir = new File(
                     Environment.getExternalStoragePublicDirectory(
                             Environment.DIRECTORY_PICTURES
@@ -315,12 +322,10 @@ public class PostFeedActivity extends CameraActivity {
                     getString(R.string.album_name)
             );
 
-            if (storageDir != null) {
-                if (! storageDir.mkdirs()) {
-                    if (! storageDir.exists()){
-                        Log.d(TAG, "failed to create directory");
-                        return null;
-                    }
+            if (! storageDir.mkdirs()) {
+                if (! storageDir.exists()){
+                    Log.d(TAG, "failed to create directory");
+                    return null;
                 }
             }
 
@@ -332,37 +337,39 @@ public class PostFeedActivity extends CameraActivity {
     }
 
 
-    /**
-     * Add the picture to the photo gallery.
-     * Must be called on all camera images or they will
-     * disappear once taken.
-     */
+    /*
     protected void addPhotoToGallery() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        CameraActivity activity = this;
-        File f = new File(activity.getCurrentPhotoPath());
+        //CameraActivity activity = this;
+        File f = new File(getCurrentPhotoPath());
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
-    }
+    }*/
 
-    public String getImagePathUri(Uri uri)
-    {
-        String[] projection = { MediaStore.Images.Media.DATA };
-        //Cursor cursor = managedQuery(uri, projection, null, null, null);
-        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-        if (cursor == null) return null;
-        int column_index =  cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+    public Bitmap getBitmapFromCameraData(Intent data, Context context) throws IOException {
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = { MediaStore.Images.Media.DATA };
+        Cursor cursor = context.getContentResolver().query(selectedImage,filePathColumn, null, null, null);
         cursor.moveToFirst();
-        String s=cursor.getString(column_index);
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        setCapturedImageURI(selectedImage);
+        setCurrentPhotoPath(picturePath);
         cursor.close();
-        return s;
+        Bitmap bitmap = BitmapFactory.decodeFile(picturePath);
+        bitmap =  rotateBitmap(bitmap, picturePath);
+        return bitmap;
     }
 
 
-    private Bitmap setFullImageFromFilePath(String imagePath, ImageView imageView) {
+    private Bitmap setFullImageFromFilePath() {
 
         Bitmap bitmap = null;
+        String imagePath = getCurrentPhotoPath();
+        // Set the image view
+        final ImageView mImageView = (ImageView)findViewById(R.id.mImageView);
 
         try {
             //first check out the image path
@@ -372,8 +379,8 @@ public class PostFeedActivity extends CameraActivity {
             }
 
             // Get the dimensions of the View
-            int targetW = imageView.getWidth();
-            int targetH = imageView.getHeight();
+            int targetW = mImageView.getWidth();
+            int targetH = mImageView.getHeight();
 
             // Get the dimensions of the bitmap
             BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -382,7 +389,7 @@ public class PostFeedActivity extends CameraActivity {
             int photoW = bmOptions.outWidth;
             int photoH = bmOptions.outHeight;
 
-            int scaleFactor = 1;
+            int scaleFactor = 2;
             if ((targetW > 0) || (targetH > 0)) {
                 scaleFactor = Math.min(photoW/targetW, photoH/targetH);
             }
@@ -392,26 +399,30 @@ public class PostFeedActivity extends CameraActivity {
             bmOptions.inSampleSize = scaleFactor;
             // bmOptions.inPurgeable = true;
             bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
-
-            //rotate image
-            ExifInterface exif = new ExifInterface(imagePath);
-            int orientation = exif
-                    .getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
-            Log.e("ExifInteface .........", "rotation ="+orientation);
-            Log.d(TAG,"orientation=" + orientation);
-
-            if ((orientation == ExifInterface.ORIENTATION_ROTATE_180))
-                bitmap = ImageUtil.RotateBitmap(bitmap, 180);
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
-                bitmap = ImageUtil.RotateBitmap(bitmap, 90);
-            else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
-                bitmap = ImageUtil.RotateBitmap(bitmap, 270);
-
-            imageView.setImageBitmap(bitmap);
+            bitmap = rotateBitmap(bitmap,imagePath);
+            mImageView.setImageBitmap(bitmap);
 
         } catch (Exception e) {
             Log.e(TAG,"setPic Error:"+e.getMessage());
         }
+
+        return bitmap;
+    }
+
+    public Bitmap rotateBitmap(Bitmap bitmap, String imagePath) throws IOException {
+        //rotate image
+        ExifInterface exif = new ExifInterface(imagePath);
+        int orientation = exif
+                .getAttributeInt(ExifInterface.TAG_ORIENTATION, 1);
+        Log.e("ExifInteface .........", "rotation ="+orientation);
+        Log.d(TAG,"orientation=" + orientation);
+
+        if ((orientation == ExifInterface.ORIENTATION_ROTATE_180))
+            bitmap = ImageUtil.RotateBitmap(bitmap, 180);
+        else if (orientation == ExifInterface.ORIENTATION_ROTATE_90)
+            bitmap = ImageUtil.RotateBitmap(bitmap, 90);
+        else if (orientation == ExifInterface.ORIENTATION_ROTATE_270)
+            bitmap = ImageUtil.RotateBitmap(bitmap, 270);
 
         return bitmap;
     }
@@ -454,17 +465,17 @@ public class PostFeedActivity extends CameraActivity {
 
         protected File doInBackground(File... files) {
 
-            File file = null;
+            File f = null;
             try {
-                file = files[0];
-                uploadData(file);
-                return file;
+                f = files[0];
+                uploadData(f);
+                return f;
 
             }catch(Exception e){
                 Log.e(TAG,e.getMessage());
             }
 
-            return file;
+            return f;
         }
 
         @Override
@@ -484,9 +495,9 @@ public class PostFeedActivity extends CameraActivity {
                             return;
                         }
 
-                        //mImageView.setImageBitmap(thumbnail.getAbsolutePath());
                         Toast.makeText(PostFeedActivity.this, "Data Sent!", Toast.LENGTH_LONG)
                                 .show();
+                        setResult(REQUEST_PHOTO);
                     }
                 });
             }catch(Exception e){
@@ -496,14 +507,14 @@ public class PostFeedActivity extends CameraActivity {
     }// end of LoadPicture class
 
 
-    public void uploadData(File file) {
+    public void uploadData(File f) {
 
         try {
             HttpPost httpPost = new HttpPost(URL_AJAX);
             httpPost.addHeader("Accept", "application/json");
             HttpClient httpClient = new DefaultHttpClient();
 
-            if(file==null){
+            if(f==null){
                  Toast.makeText(PostFeedActivity.this, "Invalid File, please try again!", Toast.LENGTH_LONG).show();
                  return;
             }
@@ -518,7 +529,8 @@ public class PostFeedActivity extends CameraActivity {
             double latitude = gpsTracker.getLatitude();
             double longitude = gpsTracker.getLongitude();
 
-            FileBody fileBody = (file.exists())?new FileBody(file):null;
+            FileBody fileBody = (f.exists())?new FileBody(f):null;
+            //FileBody fileBody = new FileBody(f);
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setCharset(MIME.UTF8_CHARSET);
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
@@ -552,7 +564,7 @@ public class PostFeedActivity extends CameraActivity {
                     is, "utf-8"), 8);
 
             StringBuilder sb = new StringBuilder();
-            String line = null;
+            String line = "";
             while ((line = reader.readLine()) != null) {
                 sb.append(line + "\n");
             }
@@ -609,12 +621,56 @@ public class PostFeedActivity extends CameraActivity {
 
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             finish();
         }
         return false;
     }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle savedInstanceState) {
+        if (mCurrentPhotoPath != null) {
+            savedInstanceState.putString(CAPTURED_PHOTO_PATH_KEY, mCurrentPhotoPath);
+        }
+        if (mCapturedImageURI != null) {
+            savedInstanceState.putString(CAPTURED_PHOTO_URI_KEY, mCapturedImageURI.toString());
+        }
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        if (savedInstanceState.containsKey(CAPTURED_PHOTO_PATH_KEY)) {
+            mCurrentPhotoPath = savedInstanceState.getString(CAPTURED_PHOTO_PATH_KEY);
+        }
+        if (savedInstanceState.containsKey(CAPTURED_PHOTO_URI_KEY)) {
+            mCapturedImageURI = Uri.parse(savedInstanceState.getString(CAPTURED_PHOTO_URI_KEY));
+        }
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    /**
+     * Getters and setters.
+     */
+
+    public String getCurrentPhotoPath() {
+        return mCurrentPhotoPath;
+    }
+
+    public void setCurrentPhotoPath(String mCurrentPhotoPath) {
+        this.mCurrentPhotoPath = mCurrentPhotoPath;
+    }
+
+    public Uri getCapturedImageURI() {
+        return mCapturedImageURI;
+    }
+
+    public void setCapturedImageURI(Uri mCapturedImageURI) {
+        this.mCapturedImageURI = mCapturedImageURI;
+    }
+
+
 
 
 }

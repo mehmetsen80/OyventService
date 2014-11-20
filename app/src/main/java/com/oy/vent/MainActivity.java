@@ -1,16 +1,15 @@
 package com.oy.vent;
 
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.oy.vent.fragment.BaseFragment;
@@ -23,14 +22,11 @@ import com.oy.vent.fragment.SettingsFragment;
 /**
  * Created by Rex St. John (on behalf of AirPair.com) on 3/4/14.
  */
-public class MainActivity extends CameraActivity
+public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, BaseFragment.OnFragmentInteractionListener {
 
+    private static final int REQUEST_PHOTO = 33333;
 
-    /**
-     * Actions
-     */
-    public static final int SELECT_PHOTO_ACTION = 0;
 
     /**
      * Fragment Identifiers
@@ -108,7 +104,7 @@ public class MainActivity extends CameraActivity
                 .commit();
     }
 
-    public void onSectionAttached(int number) {
+   /* public void onSectionAttached(int number) {
         switch (number) {
             case 1:
                 mTitle = "Home";// getString(R.string.title_section1);
@@ -119,14 +115,8 @@ public class MainActivity extends CameraActivity
             case 3:
                 mTitle = "Settings";// getString(R.string.title_section3);
                 break;
-            /*case 4:
-                mTitle = getString(R.string.title_section4);
-                break;
-            case 5:
-                mTitle = getString(R.string.title_section5);
-                break;*/
         }
-    }
+    }*/
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
@@ -172,7 +162,7 @@ public class MainActivity extends CameraActivity
         switch (item.getItemId()) {
             case R.id.action_add_feed:
                 Intent intent = new Intent(MainActivity.this,PostFeedActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, REQUEST_PHOTO);
                 return true;
             case R.id.action_settings:
                 Toast.makeText(MainActivity.this, "Settings triggered",
@@ -180,6 +170,14 @@ public class MainActivity extends CameraActivity
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_PHOTO && resultCode == Activity.RESULT_OK) {
+            Toast.makeText(this, "Post Done!", Toast.LENGTH_LONG)
+                    .show();
         }
     }
 

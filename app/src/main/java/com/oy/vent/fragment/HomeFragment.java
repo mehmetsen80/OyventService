@@ -1,62 +1,17 @@
 package com.oy.vent.fragment;
 
-import android.app.Activity;
+
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.oy.vent.MainActivity;
-import com.oy.vent.PostFeedActivity;
 import com.oy.vent.R;
-import com.oy.vent.CameraActivity;
 import com.oy.vent.utilities.GPSTracker;
-import com.oy.vent.utilities.ImageUtil;
-import com.oy.vent.utilities.PhotoActionType;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.HttpMultipartMode;
-import org.apache.http.entity.mime.MIME;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * This is an example of a fragment which can use the external Android camera to take
@@ -73,8 +28,6 @@ public class HomeFragment extends BaseFragment  {
 
     private static String TAG =  HomeFragment.class.getName();
 
-    // Image view for showing our image.
-    private ImageView mImageView;
 
     // Progress Dialog
     private ProgressDialog pDialog = null;
@@ -114,8 +67,7 @@ public class HomeFragment extends BaseFragment  {
                              Bundle savedInstanceState) {
         //let's first set the layout container
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        // Set the image view
-        mImageView = (ImageView)view.findViewById(R.id.imageViewFullSized);
+
         return view;
     }
 
@@ -159,6 +111,8 @@ public class HomeFragment extends BaseFragment  {
             pDialog.dismiss();
         }
     }
+
+
 
     /*public static Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
