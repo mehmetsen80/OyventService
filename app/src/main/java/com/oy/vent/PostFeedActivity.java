@@ -86,7 +86,6 @@ public class PostFeedActivity  extends Activity{
         setContentView(R.layout.activity_post_feed);
 
         try {
-
             // Edit Text
             final EditText mEditText = (EditText) findViewById(R.id.mEditText);
             mEditText.setOnClickListener(new View.OnClickListener() {
@@ -138,37 +137,6 @@ public class PostFeedActivity  extends Activity{
                 }
             });
 
-            //Uri selectedImage = getIntent().getData();
-            /*Bundle extras = getIntent().getExtras();
-            Uri selectedImage = (Uri) extras.get("output");
-            String posttype = (String) extras.get("POSTTYPE");
-            File file = null;
-            if(posttype.equals(PhotoActionType.CAPTURE.toString())) {
-                Bitmap bitmap = setFullImageFromFilePath(selectedImage.getPath(), mImageView);
-                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                file = new File(selectedImage.getPath());
-                try {
-                    file.createNewFile();
-                    FileOutputStream fo = new FileOutputStream(file);
-                    fo.write(bytes.toByteArray());
-                    fo.close();
-                } catch (IOException e) {
-                    Log.e(TAG, e.getMessage());
-                }
-            }else if(posttype.equals(PhotoActionType.PICK.toString())){
-                setFullImageFromFilePath(selectedImage.getPath(), mImageThumb);
-                file = new File(getImagePathUri(selectedImage));
-
-            }else{
-                Toast.makeText(PostFeedActivity.this, "Invalid picture, please try again!", Toast.LENGTH_LONG)
-                        .show();
-                finish();
-                return;
-            }
-
-            new LoadData().execute(file);//TODO: call this when button pushed*/
-
         }catch(Exception e){
             Log.e(TAG,e.getMessage());
         }
@@ -191,8 +159,6 @@ public class PostFeedActivity  extends Activity{
         // Camera exists? Then proceed...
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        // Ensure that there's a camera activity to handle the intent
-        //Activity activity = this;
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go.
             // If you don't do this, you may get a crash in some devices.
@@ -216,12 +182,10 @@ public class PostFeedActivity  extends Activity{
         }
     }
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == Activity.RESULT_OK) {
-            //addPhotoToGallery();
-           //Activity activity = this;
 
             Bitmap bitmap = setFullImageFromFilePath();// Show the full sized image.
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -236,12 +200,7 @@ public class PostFeedActivity  extends Activity{
                 Log.e(TAG,e.getMessage());
             }
 
-            /*Intent postPictureIntent = new Intent(this, PostFeedActivity.class);
-            Bundle extras = new Bundle();
-            extras.putParcelable(MediaStore.EXTRA_OUTPUT, activity.getCapturedImageURI());
-            extras.putString("POSTTYPE",PhotoActionType.CAPTURE.toString());
-            postPictureIntent.putExtras(extras);
-            startActivityForResult(postPictureIntent, POST_PICTURE);*/
+            addPhotoToGallery();
         }
         else if (requestCode == IMAGE_PICKER_SELECT  && resultCode == Activity.RESULT_OK) {
 
@@ -253,33 +212,18 @@ public class PostFeedActivity  extends Activity{
             }catch (Exception e){
                 Log.e(TAG,e.getMessage());
             }
-
-            /*Intent postPictureIntent = new Intent(this, PostFeedActivity.class);
-            Bundle extras = new Bundle();
-            extras.putParcelable(MediaStore.EXTRA_OUTPUT, activity.getCapturedImageURI());
-            extras.putString("POSTTYPE",PhotoActionType.PICK.toString());
-            postPictureIntent.putExtras(extras);
-            startActivityForResult(postPictureIntent, POST_PICTURE);*/
-
-            /*if(file.exists() && file.getAbsolutePath() != null && file.getAbsolutePath() != "")
-            {
-                new LoadData().execute(file);
-            }else
-            {
-                Toast.makeText(this, "Picture Not Uploaded",Toast.LENGTH_LONG).show();
-                mImageView.setImageBitmap(null);
-                mImageView.setImageDrawable(null);
-                setCurrentPhotoPath(null);
-                setCapturedImageURI(null);
-            }*/
-
-            // Bitmap bitmap = getBitmapFromCameraData(data,getActivity());
-
         }
         else {
             Toast.makeText(this, "Image Capture Failed", Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     /**
@@ -303,13 +247,9 @@ public class PostFeedActivity  extends Activity{
         );
 
         // Save a file: path for use with ACTION_VIEW intents
-        //CameraActivity activity = this;
         setCurrentPhotoPath("file:" + image.getAbsolutePath());
         return image;
     }
-
-
-
 
     //get the album directory
     private File getAlbumDir() {
@@ -337,15 +277,13 @@ public class PostFeedActivity  extends Activity{
     }
 
 
-    /*
     protected void addPhotoToGallery() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        //CameraActivity activity = this;
         File f = new File(getCurrentPhotoPath());
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
-    }*/
+    }
 
 
     public Bitmap getBitmapFromCameraData(Intent data, Context context) throws IOException {
@@ -397,7 +335,6 @@ public class PostFeedActivity  extends Activity{
             // Decode the image file into a Bitmap sized to fill the View
             bmOptions.inJustDecodeBounds = false;
             bmOptions.inSampleSize = scaleFactor;
-            // bmOptions.inPurgeable = true;
             bitmap = BitmapFactory.decodeFile(imagePath, bmOptions);
             bitmap = rotateBitmap(bitmap,imagePath);
             mImageView.setImageBitmap(bitmap);
@@ -432,7 +369,6 @@ public class PostFeedActivity  extends Activity{
         super.onDestroy();
         if ( pDialog!=null && pDialog.isShowing() ){
             pDialog.dismiss();
-
         }
     }
 
@@ -482,8 +418,6 @@ public class PostFeedActivity  extends Activity{
         protected void onPostExecute(final File thumbnail) {
 
             try {
-                // setResult(CROPPED_IMAGE);
-                // finish();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -525,17 +459,20 @@ public class PostFeedActivity  extends Activity{
                            .show();
                  return;
             }
+            final EditText mEditText = (EditText) findViewById(R.id.mEditText);
+            String caption = mEditText.getText().toString();
 
             double latitude = gpsTracker.getLatitude();
             double longitude = gpsTracker.getLongitude();
 
             FileBody fileBody = (f.exists())?new FileBody(f):null;
-            //FileBody fileBody = new FileBody(f);
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
             builder.setCharset(MIME.UTF8_CHARSET);
             builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            builder.addPart("file", fileBody);
+            if(fileBody != null)
+                builder.addPart("file", fileBody);
             builder.addTextBody("processType", "UPLOADPHOTO", ContentType.create("text/plain", MIME.UTF8_CHARSET));
+            builder.addTextBody("caption", caption, ContentType.create("text/plain", MIME.UTF8_CHARSET));
             builder.addTextBody("userID", "12", ContentType.create("text/plain", MIME.UTF8_CHARSET));
             builder.addTextBody("albumID", "2", ContentType.create("text/plain", MIME.UTF8_CHARSET));
             builder.addTextBody("latitude", Double.toString(latitude), ContentType.create("text/plain", MIME.UTF8_CHARSET));
@@ -556,7 +493,7 @@ public class PostFeedActivity  extends Activity{
 
         @Override
         public Object handleResponse(HttpResponse response)
-                throws ClientProtocolException, IOException {
+                throws IOException {
 
             HttpEntity r_entity = response.getEntity();
             is = r_entity.getContent();
@@ -586,30 +523,16 @@ public class PostFeedActivity  extends Activity{
                         String error = c.getString("error");
                         if(success)
                         {
-							/*String userID = c.getString("userID");
-							String username = c.getString("username");
-							Long filesize = c.getLong("filesize");
-							String filename = c.getString("filename");
-							String fileserverpath = c.getString("fileserverpath");
-							String filehttppath = c.getString("filehttppath");
-
-							Log.d(TAG,"userID:"+userID+ " username:"+username+" filesize:"+filesize+" filename:"+filename+" fileserverpath:"+fileserverpath+" filehttppath:"+filehttppath);
-							*/
-
-
-                            // setResult(RESULT_CODE_SEND_IMAGE);
+							// setResult(RESULT_CODE_SEND_IMAGE);
                             //finish();
-
                             Log.d(TAG,"Yes!");
-
                         }else
                         {
                             Log.d(TAG,"Success: "+success+"  Error:"+error);
                         }
-
                     }
                 }else{
-                    Log.d("DataArray: ", "null");
+                    Log.e("DataArray: ", "null");
                 }
 
             } catch (JSONException e) {
@@ -618,7 +541,6 @@ public class PostFeedActivity  extends Activity{
             return null;
         }
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, @NonNull KeyEvent event) {
@@ -653,7 +575,6 @@ public class PostFeedActivity  extends Activity{
     /**
      * Getters and setters.
      */
-
     public String getCurrentPhotoPath() {
         return mCurrentPhotoPath;
     }

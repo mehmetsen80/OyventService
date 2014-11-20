@@ -17,13 +17,16 @@
         android:layout_marginTop="10dip"
         >
         <EditText android:text="@string/enter_text"
-            android:layout_width="fill_parent"
+            android:layout_width="250dp"
             android:layout_height="120dp"
-            android:inputType="text"
+            android:inputType="textMultiLine"
             android:textColor="#000000"
-            android:background="#ffffff"
+            android:background="@drawable/rounded_edittext"
             android:id="@+id/mEditText"
-            >
+            android:lines="8"
+            android:maxLines="10"
+            android:minLines="6"
+            android:layout_gravity="center_horizontal">
         <requestFocus />
            </EditText>
     </LinearLayout>
