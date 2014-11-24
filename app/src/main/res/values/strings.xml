@@ -14,6 +14,16 @@
     <string name="cancel">Cancel</string>
     <string name="title_activity_post_feed">Post Feed</string>
     <string name="enter_text">Enter Text</string>
+    <string name="motto">What is going on around you?</string>
+    <string name="browse_now">Browse Now</string>
+    <string name="register_now">Register Now</string>
+    <string name="login_now">Login Now</string>
+    <string name="register">Register</string>
+    <string name="separator">|</string>
+    <string name="password">Password</string>
+    <string name="email_or_username">Email or Username</string>
+    <string name="email">Email</string>
+    <string name="username">Username</string>
 
     <!-- menu drawer title items -->
     <string-array name="nav_drawer_items">

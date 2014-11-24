@@ -92,7 +92,7 @@ public class PostFeedActivity  extends Activity{
                 @Override
                 public void onClick(View v) {
                     String text = mEditText.getText().toString();
-                    if(text == "Enter Text")
+                    if(text.equals("Enter Text"))
                         mEditText.setText("");
                 }
             });
@@ -195,6 +195,7 @@ public class PostFeedActivity  extends Activity{
                 file.createNewFile();
                 FileOutputStream fo = new FileOutputStream(file);
                 fo.write(bytes.toByteArray());
+                fo.flush();
                 fo.close();
             } catch (IOException e) {
                 Log.e(TAG,e.getMessage());
@@ -208,7 +209,7 @@ public class PostFeedActivity  extends Activity{
                 final ImageView mImageView = (ImageView) findViewById(R.id.mImageView);
                 Bitmap bitmap = getBitmapFromCameraData(data, this);
                 mImageView.setImageBitmap(bitmap);
-                file = new File(getCurrentPhotoPath());
+                file = convertBitmap2File(bitmap);
             }catch (Exception e){
                 Log.e(TAG,e.getMessage());
             }
@@ -217,6 +218,29 @@ public class PostFeedActivity  extends Activity{
             Toast.makeText(this, "Image Capture Failed", Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    public File convertBitmap2File(Bitmap bitmap){
+
+        File f = null;
+        try{
+            /*f = new File(context.getCacheDir(), "tempfile");
+            f.createNewFile();*/
+            f = createImageFile();
+            //Convert bitmap to byte array
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100 , bos);
+            //write the bytes in file
+            FileOutputStream fos = new FileOutputStream(f);
+            fos.write(bos.toByteArray());
+            fos.flush();
+            fos.close();
+
+        }catch(Exception e){
+            Log.e(TAG, e.getMessage());
+        }
+
+        return f;
     }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -432,6 +456,7 @@ public class PostFeedActivity  extends Activity{
                         Toast.makeText(PostFeedActivity.this, "Data Sent!", Toast.LENGTH_LONG)
                                 .show();
                         setResult(REQUEST_PHOTO);
+                        finish();
                     }
                 });
             }catch(Exception e){
