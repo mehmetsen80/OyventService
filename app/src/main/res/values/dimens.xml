@@ -11,8 +11,8 @@
     <dimen name="photo_height">120dp</dimen>
     <dimen name="photo_width">120dp</dimen>
 
-    <dimen name="image_thumbnail_size">150dp</dimen>
-    <dimen name="image_thumbnail_width">150dp</dimen>
+    <dimen name="image_thumbnail_size">300dp</dimen>
+    <dimen name="image_thumbnail_width">300dp</dimen>
     <dimen name="image_thumbnail_height">200dp</dimen>
     <dimen name="image_thumbnail_spacing">5dp</dimen>
     <dimen name="image_detail_pager_margin">80dp</dimen>

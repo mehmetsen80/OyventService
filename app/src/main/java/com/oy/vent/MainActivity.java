@@ -3,6 +3,7 @@ package com.oy.vent;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
@@ -26,6 +27,7 @@ public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks, BaseFragment.OnFragmentInteractionListener {
 
     private static final int REQUEST_PHOTO = 33333;
+    private static final String PREF_FILE_NAME = "OYVENTDATA";//hard disk file name
 
 
     /**
@@ -34,8 +36,9 @@ public class MainActivity extends ActionBarActivity
     public static final int SIMPLE_CAMERA_INTENT_FRAGMENT = 0;
     public static final int COMMUNITY_FRAGMENT = 1;
     public static final int SETTINGS_FRAGMENT = 2;
-    public static final int NATIVE_CAMERA_FRAGMENT = 3;
-    public static final int HORIZONTAL_GALLERY_FRAGMENT = 4;
+    public static final int LOGOUT = 3;
+    /*public static final int NATIVE_CAMERA_FRAGMENT = 3;
+    public static final int HORIZONTAL_GALLERY_FRAGMENT = 4;*/
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -85,6 +88,11 @@ public class MainActivity extends ActionBarActivity
                 targetFragment = SettingsFragment.newInstance(position + 1);
                 break;
             }
+            case LOGOUT: {
+                removeUser();
+                goToLoginActivity();
+                break;
+            }
             /*case NATIVE_CAMERA_FRAGMENT: {
 
                 break;
@@ -102,6 +110,20 @@ public class MainActivity extends ActionBarActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.container, targetFragment)
                 .commit();
+    }
+
+    //remove user info from hard disk
+    protected void removeUser()
+    {
+        SharedPreferences sharedPref = getSharedPreferences(PREF_FILE_NAME, MODE_PRIVATE);
+        sharedPref.edit().remove("userInfo").commit();
+    }
+
+    //go to the Login Screen
+    protected void goToLoginActivity(){
+        Intent intent = new Intent(this,LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 
    /* public void onSectionAttached(int number) {

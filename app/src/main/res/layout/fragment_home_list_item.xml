@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dip"  
+    android:paddingTop="0dip" 
+    android:layout_marginTop="6dip"
+    android:orientation="vertical"    
+    android:background="@null"
+    >
+    
+      <LinearLayout android:layout_width="fill_parent" 
+        android:baselineAligned="false"
+        android:padding="0dip"      
+        android:id="@+id/layout_topbar"
+        android:layout_margin="0dip"  
+        android:layout_height="wrap_content"
+        android:background="@null"
+        >
+         
+     <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="22dip"
+        android:layout_gravity="left"
+        android:layout_weight="2.5"
+        android:padding="0dip"
+        android:gravity="left" 
+        android:background="@null"       
+        android:orientation="horizontal" >
+        
+                <TextView
+                android:id="@+id/feed_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:background="@null"
+                android:textStyle="bold" 
+                android:paddingLeft="2dip"
+                android:paddingRight="2dip"
+                android:layout_margin="2dip"                
+                android:textColor="#b6b3b3"                 
+                android:textSize="12sp" 
+                />   
+               
+   
+    </RelativeLayout>       
+   
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="22dip"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:padding="0dip"
+        android:gravity="right" 
+        android:background="@null"       
+        android:orientation="horizontal" >
+        
+                
+     <!-- Feed Post Date-->
+    <TextView android:id="@+id/feed_postdate"
+        android:layout_width="wrap_content"		
+        android:layout_height="wrap_content"  
+        android:layout_gravity="right"     
+        android:textColor="#b6b3b3"
+        android:textStyle="bold"    
+        android:textSize="12sp"   
+       	android:background="@null"
+        android:paddingRight="2dip"
+        android:paddingLeft="2dip"/>
+    </RelativeLayout>
+    
+
+    </LinearLayout>
+     
+   
+   
+          
+   <LinearLayout
+       android:id="@+id/main_content0"
+       android:layout_width="fill_parent"
+       android:layout_height="wrap_content"
+       android:layout_gravity="center"      
+       android:layout_margin="0dip"
+       android:gravity="center"
+       android:orientation="vertical" >
+             <!-- Feed id / Hidden by default -->
+    <TextView
+        android:id="@+id/feed_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />  
+        
+            </LinearLayout>
+   
+ 
+    
+       <RelativeLayout 
+       android:layout_width="wrap_content"
+        android:layout_height="wrap_content"        
+        android:orientation="vertical" >    
+     <!-- Thumb image -->
+     <ImageView android:id="@+id/feed_thumb"        
+        android:layout_width="150dip" 
+        android:layout_height="150dip"        
+        android:layout_marginBottom="2dip"
+        android:layout_marginTop="0dip"        
+        android:paddingTop="0dip"
+        android:paddingBottom="0dip"          
+        android:contentDescription="feed thumb"
+        android:layout_marginRight="0dip"
+        />       
+        
+                
+        <TextView
+        	android:id="@+id/feed_points"
+        	android:layout_width="55dp"
+            android:layout_height="55dp"
+        	android:layout_gravity="center"        	
+        	android:gravity="center"        	
+        	android:layout_alignBottom="@+id/feed_thumb"    
+        	android:layout_alignRight="@+id/feed_thumb"       
+        	android:textColor="#ffffff"
+        	android:clickable="true"
+        	android:textStyle="bold"    
+        	android:textSize="12sp"    
+        	android:layout_margin="4dp"
+        	android:background="@drawable/bg_circle_points"        	
+        />  
+    </RelativeLayout>
+       
+   
+   
+   <LinearLayout android:layout_width="fill_parent" 
+        android:baselineAligned="false"
+        android:padding="0dip"      
+        android:id="@+id/layout_bottom"
+        android:layout_margin="0dip"  
+        android:layout_height="wrap_content"
+        android:background="@drawable/header_gradient"
+        >
+         
+     <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="22dip"
+        android:layout_gravity="left"
+        android:layout_weight="2.0"
+        android:padding="0dip"
+        android:gravity="left" 
+        android:background="@null"       
+        android:orientation="horizontal" >
+    
+        <TextView
+                android:id="@+id/feed_geo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"                    
+                android:textStyle="bold" 
+                android:paddingLeft="2dip" 
+                android:paddingRight="2dip"
+                android:layout_margin="2dip"                
+                android:textColor="#00507d"                                          
+                android:textSize="14sp"                          
+                /> 
+    
+    </RelativeLayout>
+    
+     <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="22dip"
+        android:layout_gravity="right"
+        android:layout_weight="1"
+        android:padding="0dip"
+        android:gravity="right" 
+        android:background="@null"       
+        android:orientation="horizontal" >
+     
+    </RelativeLayout>
+     
+   </LinearLayout>
+    
+     
+</LinearLayout>
+

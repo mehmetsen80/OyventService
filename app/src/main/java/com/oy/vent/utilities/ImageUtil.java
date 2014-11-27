@@ -9,6 +9,8 @@ import android.graphics.Matrix;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.util.Random;
+
 /**
  * Created by mehmet on 11/5/2014.
  */
@@ -55,6 +57,8 @@ public class ImageUtil {
         cursor.close();
         return BitmapFactory.decodeFile(picturePath);
     }
+
+
 
     public static Bitmap RotateBitmap(Bitmap source, float angle)
     {

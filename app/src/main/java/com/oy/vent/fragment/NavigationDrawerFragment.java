@@ -133,6 +133,8 @@ public class NavigationDrawerFragment extends Fragment {
         navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));//home: all feeds
         navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));//community feeds
         navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));//settings
+        navDrawerItems.add(new NavigationDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1)));//logout
+
         adapter = new NavigationDrawerListAdapter(getActivity(),
                 navDrawerItems);//create the adapter along with menu items
         mDrawerListView.setAdapter(adapter);//setting the nav drawer list adapter

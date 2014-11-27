@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+        	android:layout_height="wrap_content">
+<item android:state_pressed="true" android:drawable="@drawable/bg_circle_points_pressed" />
+<item>
+<shape  
+    android:shape="oval" >
+    <corners android:radius="15dip"/>
+    <stroke android:color="#047fb7" android:width="2dip"/>
+    <!--  <solid android:color="@android:color/transparent"/> -->
+    <solid android:color="#00507d"/>
+    
+</shape>
+</item>
+</selector>

@@ -14,7 +14,7 @@
     <string name="cancel">Cancel</string>
     <string name="title_activity_post_feed">Post Feed</string>
     <string name="enter_text">Enter Text</string>
-    <string name="motto">What is going on around you?</string>
+    <string name="motto">What is happening around you?</string>
     <string name="browse_now">Browse Now</string>
     <string name="register_now">Register Now</string>
     <string name="login_now">Login Now</string>
@@ -31,6 +31,7 @@
         <item>Community</item>
         <!-- <item >My Photos</item> -->
         <item>Settings</item>
+        <item>Logout</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
@@ -39,7 +40,7 @@
         <item>@drawable/ic_home</item> <!-- All photos -->
         <item>@drawable/ic_communities</item> <!-- community photos -->
         <item>@drawable/ic_photos</item> <!-- settings -->
-        <!-- <item>@drawable/ic_pages</item> -->
+        <item>@drawable/ic_pages</item>
         <!-- <item>@drawable/ic_people</item> -->
         <!-- <item>@drawable/ic_whats_hot</item> -->
 
